@@ -10,7 +10,8 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 ### 迁移会话
 
-- **单条**：把会话行拖到目标工作区的行上（落点有虚线高亮）。
+- **单条（菜单）**：会话「…」→「迁移会话」，选一个目标工作区。
+- **单条（拖拽）**：把会话行拖到目标工作区的行上（落点有虚线高亮）；会话多时把指针停在列表上下边缘会自动滚动。
 - **整个工作区**：工作区「…」→「迁移工作区」，选目标后一次迁走。
 
 迁移会在目标路径下重建一份带完整历史的会话，再删除原会话（不进入归档）。工作区归属由会话 header 的 `cwd` 决定且 header 不可改写，所以只能重建。
@@ -39,18 +40,33 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 ## 安装
 
+发布形态是 tgz 包，装进 profile 后是独立副本，源码目录可以随意移动、改名或删除。
+
 ```bash
-git clone https://github.com/AnbaoIy/DSH-Enhance.git
-dsh plugin --profile desktop add link:C:/path/to/DSH-Enhance
+# 1. 打包
+pnpm pack                                  # 产出 dsh-enhance-<version>.tgz
+# 2. 放到一个固定位置
+mkdir -p ~/.dsh/plugins && mv dsh-enhance-*.tgz ~/.dsh/plugins/
+# 3. 在 profile 里安装
+cd ~/.dsh/profiles/desktop
+pnpm add file:C:/Users/<you>/.dsh/plugins/dsh-enhance-1.2.0.tgz
 ```
 
-或直接改 `~/.dsh/profiles/desktop/package.json`：
+或直接改 `~/.dsh/profiles/desktop/package.json` 后在该目录执行 `pnpm install`：
 
 ```json
 {
-  "dependencies": { "dsh-enhance": "link:C:/path/to/DSH-Enhance" },
+  "dependencies": { "dsh-enhance": "file:C:/Users/<you>/.dsh/plugins/dsh-enhance-1.2.0.tgz" },
   "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-enhance"] } }
 }
+```
+
+升级时重新打包、把新 tgz 放到同一目录、改版本号，再 `pnpm install`。
+
+开发时想要改代码即时生效，改用链接指向源码目录：
+
+```bash
+dsh plugin --profile desktop add link:C:/path/to/DSH-Enhance
 ```
 
 插件自带 `cordis.patch.yml`，把 `web` 的 `searchProvider` / `fetchProvider` 指向本插件。重启 DSH 后出现「设置 → 增强设置」。
@@ -61,9 +77,11 @@ dsh plugin --profile desktop add link:C:/path/to/DSH-Enhance
 
 | 开关 | 作用 |
 | --- | --- |
-| 删除会话功能 | 关掉后会话菜单不再出现「删除会话」 |
-| 工作区迁移功能 | 关掉后拖拽与「迁移工作区」都不可用 |
-| 搜索功能替换 / 抓取功能替换 | 关掉后交还宿主内置 provider |
+| 会话删除 | 关掉后会话菜单不再出现「删除会话」 |
+| 工作区迁移 | 关掉后拖拽、「迁移会话」与「迁移工作区」都不可用 |
+| 网页搜索/抓取替换 | 关掉后交还宿主内置 provider |
+
+宿主升级后插件会自检一次：某项功能在新的 DSH 上不可用时，该开关连同它下面的区域一起置灰，标题变红。
 
 同页还可配各平台 key、优先-候补链与超时。密钥存入 DSH 凭据服务，不写设置文件、不进日志。
 

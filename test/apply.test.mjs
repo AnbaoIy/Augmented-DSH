@@ -333,6 +333,7 @@ test("宿主没有 web 服务时插件仍能加载，只失去搜索替换", () 
     "/dsh-enhance/move-history",
     "/dsh-enhance/restore-session",
     "/dsh-enhance/list-workspaces",
+    "/dsh-enhance/health",
   ]);
   assert.equal(typeof dispose, "function");
 });
