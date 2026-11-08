@@ -36,7 +36,7 @@ async function readHistory() {
  * @param options.withoutPersistence - 模拟没有持久化后端的宿主。
  */
 async function makeWorld(options = {}) {
-  const root = await mkdtemp(join(tmpdir(), "dsh-enhance-move-"));
+  const root = await mkdtemp(join(tmpdir(), "augmented-dsh-move-"));
   // 官方 JSONL 后端的工件名是 session.v<N>.jsonl，删除前会校验这个名字。
   const transcript = join(root, "session.v4.jsonl");
   await writeFile(transcript, "{}\n", "utf8");

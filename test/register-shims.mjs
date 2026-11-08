@@ -16,6 +16,6 @@ import { pathToFileURL } from "node:url";
 
 // 插件把迁移记录与备份写在 $DSH_HOME/workspace-mover 下；测试绝不能碰用户真实目录，
 // 所以这里无条件改写（宿主进程本身会带一个指向 ~/.dsh 的 DSH_HOME）。
-process.env.DSH_HOME = mkdtempSync(join(tmpdir(), "dsh-enhance-test-home-"));
+process.env.DSH_HOME = mkdtempSync(join(tmpdir(), "augmented-dsh-test-home-"));
 
 register("./shims-resolver.mjs", pathToFileURL(import.meta.filename));

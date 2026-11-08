@@ -1,4 +1,4 @@
-# DSH-Enhance
+# Augmented DSH
 
 DSH会话删除，工作区迁移，搜索换源插件
 
@@ -18,7 +18,7 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 ### 迁移记录
 
-每次迁移前自动备份完整会话。「设置 → 增强设置」→「迁移记录」列出历史（会话名、从哪个工作区到哪个、时间），可把会话一键恢复到迁移前的工作区。
+每次迁移前自动备份完整会话。「设置 → Augmented DSH」→「迁移记录」列出历史（会话名、从哪个工作区到哪个、时间），可把会话一键恢复到迁移前的工作区。
 
 记录与备份保留 **3 天**，DSH 启动时自动清理过期项。
 
@@ -36,7 +36,7 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 ![搜索与抓取设置](assets/search-fetch-settings.png)
 
-上图即「设置 → 增强设置」里的样子：一个总开关管搜索与抓取，两条链各自选平台，下方填各平台密钥。
+上图即「设置 → Augmented DSH」里的样子：一个总开关管搜索与抓取，两条链各自选平台，下方填各平台密钥。
 
 ## 安装
 
@@ -44,20 +44,20 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 ```bash
 # 1. 打包
-pnpm pack                                  # 产出 dsh-enhance-<version>.tgz
+pnpm pack                                  # 产出 augmented-dsh-<version>.tgz
 # 2. 放到一个固定位置
-mkdir -p ~/.dsh/plugins && mv dsh-enhance-*.tgz ~/.dsh/plugins/
+mkdir -p ~/.dsh/plugins && mv augmented-dsh-*.tgz ~/.dsh/plugins/
 # 3. 在 profile 里安装
 cd ~/.dsh/profiles/desktop
-pnpm add file:C:/Users/<you>/.dsh/plugins/dsh-enhance-1.2.0.tgz
+pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.2.0.tgz
 ```
 
 或直接改 `~/.dsh/profiles/desktop/package.json` 后在该目录执行 `pnpm install`：
 
 ```json
 {
-  "dependencies": { "dsh-enhance": "file:C:/Users/<you>/.dsh/plugins/dsh-enhance-1.2.0.tgz" },
-  "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-enhance"] } }
+  "dependencies": { "augmented-dsh": "file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.2.0.tgz" },
+  "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "augmented-dsh"] } }
 }
 ```
 
@@ -66,10 +66,10 @@ pnpm add file:C:/Users/<you>/.dsh/plugins/dsh-enhance-1.2.0.tgz
 开发时想要改代码即时生效，改用链接指向源码目录：
 
 ```bash
-dsh plugin --profile desktop add link:C:/path/to/DSH-Enhance
+dsh plugin --profile desktop add link:C:/path/to/Augmented-DSH
 ```
 
-插件自带 `cordis.patch.yml`，把 `web` 的 `searchProvider` / `fetchProvider` 指向本插件。重启 DSH 后出现「设置 → 增强设置」。
+插件自带 `cordis.patch.yml`，把 `web` 的 `searchProvider` / `fetchProvider` 指向本插件。重启 DSH 后出现「设置 → Augmented DSH」。
 
 > 不要与 `dsh-webenhance`、`@michengai/dsh-archive-manager` 同时启用：三者争用同一个会话菜单槽位与 web provider id。
 

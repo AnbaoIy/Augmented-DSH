@@ -59,8 +59,8 @@ function makeCtx(options = {}) {
 }
 
 test("插件名、provider id 与 inject 稳定", () => {
-  assert.equal(name, "dsh-enhance");
-  assert.equal(PROVIDER_ID, "dsh-enhance");
+  assert.equal(name, "augmented-dsh");
+  assert.equal(PROVIDER_ID, "augmented-dsh");
   // 不硬依赖任何服务：web 缺失时只降级搜索替换，不允许整插件加载失败。
   assert.deepEqual(inject, []);
 });
@@ -68,8 +68,8 @@ test("插件名、provider id 与 inject 稳定", () => {
 test("apply 各注册一个搜索与抓取提供方", () => {
   const { ctx, searchProviders, fetchProviders } = makeCtx();
   const dispose = apply(ctx, makeConfig());
-  assert.deepEqual(searchProviders.map((provider) => provider.id), ["dsh-enhance"]);
-  assert.deepEqual(fetchProviders.map((provider) => provider.id), ["dsh-enhance"]);
+  assert.deepEqual(searchProviders.map((provider) => provider.id), ["augmented-dsh"]);
+  assert.deepEqual(fetchProviders.map((provider) => provider.id), ["augmented-dsh"]);
   assert.equal(typeof dispose, "function");
 });
 
@@ -113,7 +113,7 @@ test("DeepSeek 官方直接委托内置 provider，不再自己解析 key", asyn
     },
   });
   apply(ctx, makeConfig({ searchChain: field("deepseek") }));
-  const provider = ctx.web.searchProviders.get("dsh-enhance");
+  const provider = ctx.web.searchProviders.get("augmented-dsh");
   const result = await provider.search({ query: "hello" });
   assert.deepEqual(seen, ["hello"]);
   assert.equal(result.sources[0].url, "https://official.example");
@@ -130,7 +130,7 @@ test("内置抓取 provider 返回时同样被转交", async () => {
     },
   });
   apply(ctx, makeConfig({ fetchChain: field("deepseek") }));
-  const provider = ctx.web.fetchProviders.get("dsh-enhance");
+  const provider = ctx.web.fetchProviders.get("augmented-dsh");
   const result = await provider.fetch({ url: "https://a.example" });
   assert.equal(result.body.content, "hello");
 });
@@ -148,7 +148,7 @@ test("内置 provider 不可用时换候补平台", async () => {
       searchChain: field("deepseek,tavily"),
       tavilyApiKey: field("tvly-key"),
     }));
-    const provider = ctx.web.searchProviders.get("dsh-enhance");
+    const provider = ctx.web.searchProviders.get("augmented-dsh");
     const result = await provider.search({ query: "x" });
     assert.equal(calls.length, 1);
     assert.match(calls[0], /tavily\.com\/search$/u);
@@ -170,7 +170,7 @@ test("关闭搜索替换后转交宿主其它 provider", async () => {
     },
   });
   apply(ctx, makeConfig({ enableSearch: field(false) }));
-  const provider = ctx.web.searchProviders.get("dsh-enhance");
+  const provider = ctx.web.searchProviders.get("augmented-dsh");
   await provider.search({ query: "hello" });
   assert.deepEqual(seen, ["hello"]);
 });
@@ -178,7 +178,7 @@ test("关闭搜索替换后转交宿主其它 provider", async () => {
 test("关闭搜索替换且没有其它 provider 时报 WEB_PROVIDER_UNAVAILABLE", async () => {
   const { ctx } = makeCtx();
   apply(ctx, makeConfig({ enableSearch: field(false) }));
-  const provider = ctx.web.searchProviders.get("dsh-enhance");
+  const provider = ctx.web.searchProviders.get("augmented-dsh");
   await assert.rejects(
     () => provider.search({ query: "hello" }),
     (error) => error.code === "WEB_PROVIDER_UNAVAILABLE",
@@ -200,7 +200,7 @@ test("第三方平台 429 时换到候补平台", async () => {
       tavilyApiKey: field("tvly"),
       firecrawlApiKey: field("fc"),
     }));
-    const provider = ctx.web.searchProviders.get("dsh-enhance");
+    const provider = ctx.web.searchProviders.get("augmented-dsh");
     const result = await provider.search({ query: "x" });
     assert.equal(calls.length, 2);
     assert.match(calls[1], /firecrawl\.dev\/v2\/search$/u);
@@ -220,7 +220,7 @@ test("全部平台失败时抛出带每次尝试的 WebError", async () => {
       parallelApiKey: field("a"),
       tavilyApiKey: field("b"),
     }));
-    const provider = ctx.web.searchProviders.get("dsh-enhance");
+    const provider = ctx.web.searchProviders.get("augmented-dsh");
     await assert.rejects(
       () => provider.search({ query: "x" }),
       (error) => error.code === "WEB_PROVIDER_ERROR" && /Parallel/u.test(error.message) && /Tavily/u.test(error.message),
@@ -252,7 +252,7 @@ test("抓取时优先平台返回反爬页会换到候补平台", async () => {
       tavilyApiKey: field("tvly"),
       firecrawlApiKey: field("fc"),
     }));
-    const provider = ctx.web.fetchProviders.get("dsh-enhance");
+    const provider = ctx.web.fetchProviders.get("augmented-dsh");
     const result = await provider.fetch({ url: "https://target.example" });
     assert.equal(calls.length, 2);
     assert.equal(result.statusCode, 200);
@@ -272,7 +272,7 @@ test("只有官方一项时，内置接口的错误原样抛出，不换成插�
     },
   });
   apply(ctx, makeConfig({ searchChain: field("deepseek") }));
-  const provider = ctx.web.searchProviders.get("dsh-enhance");
+  const provider = ctx.web.searchProviders.get("augmented-dsh");
   await assert.rejects(() => provider.search({ query: "x" }), (error) => error === original);
 });
 
@@ -295,7 +295,7 @@ test("官方在链首失败时仍然换到候补平台", async () => {
       searchChain: field("deepseek,tavily"),
       tavilyApiKey: field("tvly"),
     }));
-    const provider = ctx.web.searchProviders.get("dsh-enhance");
+    const provider = ctx.web.searchProviders.get("augmented-dsh");
     const result = await provider.search({ query: "x" });
     assert.equal(result.sources[0].url, "https://fallback.example");
     assert.equal(calls.length, 1);
@@ -327,13 +327,13 @@ test("宿主没有 web 服务时插件仍能加载，只失去搜索替换", () 
   };
   const dispose = apply(ctx, makeConfig());
   assert.deepEqual(routes, [
-    "/dsh-enhance/move-session",
-    "/dsh-enhance/move-workspace",
-    "/dsh-enhance/delete-session",
-    "/dsh-enhance/move-history",
-    "/dsh-enhance/restore-session",
-    "/dsh-enhance/list-workspaces",
-    "/dsh-enhance/health",
+    "/augmented-dsh/move-session",
+    "/augmented-dsh/move-workspace",
+    "/augmented-dsh/delete-session",
+    "/augmented-dsh/move-history",
+    "/augmented-dsh/restore-session",
+    "/augmented-dsh/list-workspaces",
+    "/augmented-dsh/health",
   ]);
   assert.equal(typeof dispose, "function");
 });
@@ -352,7 +352,7 @@ test("抓取遇到 404 时直接返回结果，不降级再花一次额度", asy
       tavilyApiKey: field("tvly"),
       firecrawlApiKey: field("fc"),
     }));
-    const provider = ctx.web.fetchProviders.get("dsh-enhance");
+    const provider = ctx.web.fetchProviders.get("augmented-dsh");
     const result = await provider.fetch({ url: "https://gone.example" });
     assert.equal(result.statusCode, 404);
     assert.equal(result.body.content, "");
