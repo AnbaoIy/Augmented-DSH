@@ -69,7 +69,7 @@ pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.0.5.tgz
 }
 ```
 
-升级时重新打包、把新 tgz 放到同一目录、改版本号，再 `pnpm install`。
+升级时重新打包，覆盖同一目录下的 tgz，再执行 `pnpm install --force`（同名文件 pnpm 默认走缓存）。
 
 开发时想要改代码即时生效，改用链接指向源码目录：
 
