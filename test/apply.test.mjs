@@ -331,6 +331,7 @@ test("宿主没有 web 服务时插件仍能加载，只失去搜索替换", () 
     "/augmented-dsh/move-workspace",
     "/augmented-dsh/delete-session",
     "/augmented-dsh/move-history",
+    "/augmented-dsh/delete-history",
     "/augmented-dsh/restore-session",
     "/augmented-dsh/list-workspaces",
     "/augmented-dsh/health",
