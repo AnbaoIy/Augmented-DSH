@@ -1,6 +1,6 @@
 {
   "name": "augmented-dsh",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Augmented DSH： 会话迁移（含备份与迁移记录恢复）/ 删除增强，以及多平台优先-候补的搜索与抓取替换。",
   "license": "MIT",
   "repository": {
