@@ -22,6 +22,14 @@ DSH会话删除，工作区迁移，搜索换源插件
 
 记录与备份保留 **3 天**，DSH 启动时自动清理过期项。
 
+### 删除记录
+
+删除会话前同样会先备份完整历史。「设置 → Augmented DSH」→「删除记录」可以按删除时间把误删的会话找回来。
+
+- 同一次对话反复「删除 → 恢复 → 再删除」时，只显示为一个条目，条目内按删除时间逐行列出，每行一个恢复按钮（恢复到那次删除前的状态）；
+- 期间改过名字的话，会按改名分段，段与段之间有一条内缩的分割线；
+- 记录与备份同样保留 3 天，过期后一起清掉。
+
 ### 搜索 / 抓取替换
 
 把网页搜索与抓取换成一串「优先 → 候补」平台，前一家不可用（没 key、限流、超时、没抓到正文）就自动换下一家。
@@ -49,14 +57,14 @@ pnpm pack                                  # 产出 augmented-dsh-<version>.tgz
 mkdir -p ~/.dsh/plugins && mv augmented-dsh-*.tgz ~/.dsh/plugins/
 # 3. 在 profile 里安装
 cd ~/.dsh/profiles/desktop
-pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.2.0.tgz
+pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.3.4.tgz
 ```
 
 或直接改 `~/.dsh/profiles/desktop/package.json` 后在该目录执行 `pnpm install`：
 
 ```json
 {
-  "dependencies": { "augmented-dsh": "file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.2.0.tgz" },
+  "dependencies": { "augmented-dsh": "file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.3.4.tgz" },
   "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "augmented-dsh"] } }
 }
 ```
@@ -77,7 +85,7 @@ dsh plugin --profile desktop add link:C:/path/to/Augmented-DSH
 
 | 开关 | 作用 |
 | --- | --- |
-| 会话删除 | 关掉后会话菜单不再出现「删除会话」 |
+| 会话删除 | 关掉后会话菜单不再出现「删除会话」，删除记录一并停用 |
 | 工作区迁移 | 关掉后拖拽、「迁移会话」与「迁移工作区」都不可用 |
 | 网页搜索/抓取替换 | 关掉后交还宿主内置 provider |
 
@@ -88,6 +96,7 @@ dsh plugin --profile desktop add link:C:/path/to/Augmented-DSH
 ## 常见问题
 
 - **迁移后原会话在哪？** 已删除，不进归档；3 天内在「迁移记录」里点「恢复」可以找回。
+- **误删了会话怎么办？** 「设置 → Augmented DSH」→「删除记录」，按时间点恢复。
 - **「恢复」是灰的？** 那条记录由旧版插件留下，没有对应备份文件。
 - **迁移后侧边栏显示「未命名」？** 旧版本的问题，现在迁移完会立刻写好标题缓存；已受影响的会话点开一次即可。
 - **搜索没走我配的平台？** 确认开关已开、该平台在优先位、key 已保存。
