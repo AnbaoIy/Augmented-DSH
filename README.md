@@ -57,14 +57,14 @@ pnpm pack                                  # 产出 augmented-dsh-<version>.tgz
 mkdir -p ~/.dsh/plugins && mv augmented-dsh-*.tgz ~/.dsh/plugins/
 # 3. 在 profile 里安装
 cd ~/.dsh/profiles/desktop
-pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.0.6.tgz
+pnpm add file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.0.5.tgz
 ```
 
 或直接改 `~/.dsh/profiles/desktop/package.json` 后在该目录执行 `pnpm install`：
 
 ```json
 {
-  "dependencies": { "augmented-dsh": "file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.0.6.tgz" },
+  "dependencies": { "augmented-dsh": "file:C:/Users/<you>/.dsh/plugins/augmented-dsh-1.0.5.tgz" },
   "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "augmented-dsh"] } }
 }
 ```
